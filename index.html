@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LINE刮刮樂小遊戲</title>
+    <style>
+        #scratchCard {
+            position: relative;
+            width: 300px;
+            height: 150px;
+            margin: 20px auto;
+            border: 1px solid #000;
+        }
+        #prize {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            background-color: #f0f0f0;
+        }
+        #scratch {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div id="scratchCard">
+        <div id="prize"></div>
+        <canvas id="scratch"></canvas>
+    </div>
+    <script>
+        const prizes = ['恭喜中獎！', '再接再厲！', '謝謝參與！'];
+        const canvas = document.getElementById('scratch');
+        const ctx = canvas.getContext('2d');
+        const prizeEl = document.getElementById('prize');
+
+        function init() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            ctx.fillStyle = '#888';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            prizeEl.textContent = prizes[Math.floor(Math.random() * prizes.length)];
+        }
+
+        function scratch(e) {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.beginPath();
+            ctx.arc(x, y, 10, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+
+        canvas.addEventListener('mousemove', scratch);
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            scratch(e.touches[0]);
+        });
+
+        init();
+    </script>
+</body>
+</html>
